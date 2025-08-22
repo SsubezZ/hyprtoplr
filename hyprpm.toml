@@ -1,0 +1,16 @@
+[repository]
+name = "hyprtoplr"
+authors = ["subez"]
+commit_pins = [
+  # ["<hyprland commit>",                        "<hyprtoplr commit>"]
+    ["c4a4c341568944bd4fb9cd503558b2de602c0213", "1ab236602d66157a8c92662acbfcb6236df4f134"], # 0.50.0
+    ["4e242d086e20b32951fdc0ebcbfb4d41b5be8dcc", "1ab236602d66157a8c92662acbfcb6236df4f134"]  # 0.50.1
+]
+
+[hyprtoplr]
+description = "Top Layer visibility plugin for Hyprland"
+authors = ["subez"]
+output = "hyprtoplr.so"
+build = [
+    "make all",
+]
