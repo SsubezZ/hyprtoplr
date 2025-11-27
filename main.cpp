@@ -7,6 +7,7 @@
 
 #define private public
 #include <hyprland/src/Compositor.hpp>
+#include <hyprland/src/desktop/state/FocusState.hpp>
 #include <hyprland/src/desktop/Window.hpp>
 #include <hyprland/src/config/ConfigManager.hpp>
 #include <hyprland/src/render/Renderer.hpp>
@@ -28,11 +29,11 @@ APICALL EXPORT std::string PLUGIN_API_VERSION() {
 static bool            g_forceTopLayersVisible = false;
 
 static SDispatchResult showTopLayers(std::string) {
-    if (!g_pCompositor->m_lastMonitor || !g_pCompositor->m_lastMonitor->m_activeWorkspace) {
+    if (!Desktop::focusState()->monitor() || !Desktop::focusState()->monitor()->m_activeWorkspace) {
         return SDispatchResult{.success = false, .error = "No active monitor or workspace"};
     }
 
-    auto monitor = g_pCompositor->m_lastMonitor.lock();
+    auto monitor = Desktop::focusState()->monitor();
     if (!monitor) {
         return SDispatchResult{.success = false, .error = "Monitor no longer valid"};
     }
@@ -49,11 +50,11 @@ static SDispatchResult showTopLayers(std::string) {
 }
 
 static SDispatchResult hideTopLayers(std::string) {
-    if (!g_pCompositor->m_lastMonitor || !g_pCompositor->m_lastMonitor->m_activeWorkspace) {
+    if (!Desktop::focusState()->monitor() || !Desktop::focusState()->monitor()->m_activeWorkspace) {
         return SDispatchResult{.success = false, .error = "No active monitor or workspace"};
     }
 
-    auto monitor = g_pCompositor->m_lastMonitor.lock();
+    auto monitor = Desktop::focusState()->monitor();
     if (!monitor) {
         return SDispatchResult{.success = false, .error = "Monitor no longer valid"};
     }
@@ -71,11 +72,11 @@ static SDispatchResult hideTopLayers(std::string) {
 }
 
 static SDispatchResult toggleTopLayers(std::string) {
-    if (!g_pCompositor->m_lastMonitor || !g_pCompositor->m_lastMonitor->m_activeWorkspace) {
+    if (!Desktop::focusState()->monitor() || !Desktop::focusState()->monitor()->m_activeWorkspace) {
         return SDispatchResult{.success = false, .error = "No active monitor or workspace"};
     }
 
-    auto monitor = g_pCompositor->m_lastMonitor.lock();
+    auto monitor = Desktop::focusState()->monitor();
     if (!monitor) {
         return SDispatchResult{.success = false, .error = "Monitor no longer valid"};
     }
@@ -103,11 +104,11 @@ static SDispatchResult toggleTopLayers(std::string) {
 }
 
 static SDispatchResult justToggleTopLayers(std::string) {
-    if (!g_pCompositor->m_lastMonitor || !g_pCompositor->m_lastMonitor->m_activeWorkspace) {
+    if (!Desktop::focusState()->monitor() || !Desktop::focusState()->monitor()->m_activeWorkspace) {
         return SDispatchResult{.success = false, .error = "No active monitor or workspace"};
     }
 
-    auto monitor = g_pCompositor->m_lastMonitor.lock();
+    auto monitor = Desktop::focusState()->monitor();
     if (!monitor) {
         return SDispatchResult{.success = false, .error = "Monitor no longer valid"};
     }
