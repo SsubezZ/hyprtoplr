@@ -122,11 +122,27 @@ static SDispatchResult justToggleTopLayers(std::string) {
     return SDispatchResult{};
 }
 
+static SDispatchResult resetTopLayers(std::string) {
+    auto monitor = g_pCompositor->m_lastMonitor.lock();
+    if (!monitor)
+        return SDispatchResult{.success = false, .error = "Monitor no longer valid"};
+
+    PHLWORKSPACE visibleWorkspace = monitor->m_activeSpecialWorkspace ? monitor->m_activeSpecialWorkspace : monitor->m_activeWorkspace;
+
+    for (const auto& ls : monitor->m_layerSurfaceLayers[2]) {
+        *ls->m_alpha = (visibleWorkspace->m_hasFullscreenWindow && visibleWorkspace->m_fullscreenMode == FSMODE_FULLSCREEN) ? 0.f : 1.f;
+    }
+
+    g_forceTopLayersVisible = false; // reset internal state
+    g_pHyprRenderer->damageMonitor(monitor);
+    return SDispatchResult{};
+}
+
 APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
     PHANDLE = handle;
 
     const std::string COMPOSITOR_HASH = __hyprland_api_get_hash();
-    const std::string CLIENT_HASH = __hyprland_api_get_client_hash();
+    const std::string CLIENT_HASH     = __hyprland_api_get_client_hash();
 
     if (COMPOSITOR_HASH != CLIENT_HASH) {
         HyprlandAPI::addNotification(PHANDLE, "[hyprtoplr] Failure in initialization: Version mismatch (headers ver is not equal to running hyprland ver)",
@@ -139,6 +155,7 @@ APICALL EXPORT PLUGIN_DESCRIPTION_INFO PLUGIN_INIT(HANDLE handle) {
     success      = success && HyprlandAPI::addDispatcherV2(PHANDLE, "plugin:hytop:hide", ::hideTopLayers);
     success      = success && HyprlandAPI::addDispatcherV2(PHANDLE, "plugin:hytop:toggle", ::toggleTopLayers);
     success      = success && HyprlandAPI::addDispatcherV2(PHANDLE, "plugin:hytop:justtoggle", ::justToggleTopLayers);
+    success      = success && HyprlandAPI::addDispatcherV2(PHANDLE, "plugin:hytop:reset", ::resetTopLayers);
 
     if (success)
         HyprlandAPI::addNotification(PHANDLE, "[hyprtoplr] Initialized successfully!", CHyprColor{0.2, 1.0, 0.2, 1.0}, 5000);
