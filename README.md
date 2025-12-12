@@ -35,6 +35,7 @@ All dispatchers here are called `plugin:hytop:<name>` e.g. `plugin:hytop:toggle`
 | **hide**       | Forces top layers to be hidden, regardless of workspace fullscreen state.                        | `hyprctl dispatch plugin:hytay:hide`       |
 | **toggle**     | Toggles top layers visibility, but respects fullscreen rules of the active or special workspace. | `hyprctl dispatch plugin:hytay:toggle`     |
 | **justtoggle** | Toggles top layers visibility unconditionally, ignoring workspace and fullscreen rules.          | `hyprctl dispatch plugin:hytay:justtoggle` |
+| **reset**      | Resets the state of the visibilty.                                                               | `hyprctl dispatch plugin:hytay:reset`      |
 
 ## Usage
 
